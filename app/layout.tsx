@@ -17,9 +17,13 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HALFLINE — Live Match Escrow",
+  title: "HalfLine — Live Match Escrow",
   description:
-    "Peer-to-peer USDC escrow settled on first-half corner counts via TxLINE",
+    "Peer-to-peer USDC escrow on Solana — stake on first-half corner counts, settled automatically at halftime via TxLINE CPI.",
+  openGraph: {
+    title: "HalfLine",
+    description: "Stake USDC on live match corners. Settled at halftime.",
+  },
 };
 
 export default function RootLayout({

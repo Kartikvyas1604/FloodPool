@@ -12,35 +12,38 @@ import { WalletButton } from "./components/WalletButton";
 import { cn } from "./lib/utils";
 import type { Match, Side, StakePosition, MatchStatus, FeedState } from "./lib/types";
 
-const MOCK_MATCHES: Match[] = [
-  {
-    id: "m1",
-    homeTeam: "Brazil",
-    awayTeam: "Argentina",
-    fixtureId: 4471,
-    statKey: "1007+1008",
-    kickoff: Date.now() - 120000,
-    status: "live",
-  },
-  {
-    id: "m2",
-    homeTeam: "Germany",
-    awayTeam: "France",
-    fixtureId: 4472,
-    statKey: "1007+1008",
-    kickoff: Date.now() + 1800000,
-    status: "upcoming",
-  },
-  {
-    id: "m3",
-    homeTeam: "England",
-    awayTeam: "Spain",
-    fixtureId: 4473,
-    statKey: "1007+1008",
-    kickoff: Date.now() - 3600000,
-    status: "settled",
-  },
-];
+function buildMockMatches(): Match[] {
+  const now = Date.now();
+  return [
+    {
+      id: "m1",
+      homeTeam: "Brazil",
+      awayTeam: "Argentina",
+      fixtureId: 4471,
+      statKey: "1007+1008",
+      kickoff: now - 120000,
+      status: "live",
+    },
+    {
+      id: "m2",
+      homeTeam: "Germany",
+      awayTeam: "France",
+      fixtureId: 4472,
+      statKey: "1007+1008",
+      kickoff: now + 1800000,
+      status: "upcoming",
+    },
+    {
+      id: "m3",
+      homeTeam: "England",
+      awayTeam: "Spain",
+      fixtureId: 4473,
+      statKey: "1007+1008",
+      kickoff: now - 3600000,
+      status: "settled",
+    },
+  ];
+}
 
 function getDefaultFeed(match: Match | null): FeedState {
   return {
@@ -53,6 +56,7 @@ function getDefaultFeed(match: Match | null): FeedState {
 export function ScoreboardContent() {
   const { publicKey, connected } = useWallet();
 
+  const [matchList] = useState<Match[]>(buildMockMatches);
   const [match, setMatch] = useState<Match | null>(null);
   const [matchStatus, setMatchStatus] = useState<MatchStatus>("upcoming");
   const [clock, setClock] = useState(0);
@@ -279,7 +283,7 @@ export function ScoreboardContent() {
           )}
 
           <MatchSelector
-            matches={MOCK_MATCHES}
+            matches={matchList}
             selected={match}
             onSelect={handleSelectMatch}
             disabled={matchStatus === "live"}
