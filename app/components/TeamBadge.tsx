@@ -12,6 +12,11 @@ interface TeamBadgeProps {
   onConnect?: () => void;
 }
 
+const SIDE_COLORS = {
+  OVER: "corner-flag" as const,
+  UNDER: "floodlight" as const,
+} as const;
+
 export function TeamBadge({
   label,
   side,
@@ -21,8 +26,17 @@ export function TeamBadge({
   onConnect,
 }: TeamBadgeProps) {
   const isActive = stake?.side === side;
-  const accentColor = side === "OVER" ? "corner-flag" : "floodlight";
-  const sideColor = side === "OVER" ? "corner-flag" : "floodlight";
+  const sideKey = side === "OVER" ? "OVER" : "UNDER";
+  const accentStyle = {
+    OVER: "text-corner-flag border-corner-flag/40 hover:bg-corner-flag/10",
+    UNDER:
+      "text-floodlight border-floodlight/40 hover:bg-floodlight/10",
+  };
+
+  const activeStyle = {
+    OVER: "text-corner-flag",
+    UNDER: "text-floodlight",
+  };
 
   return (
     <div
@@ -35,7 +49,7 @@ export function TeamBadge({
       <span
         className={cn(
           "font-league text-lg sm:text-xl tracking-widest text-chalk uppercase",
-          isActive && `text-${accentColor}`
+          isActive && activeStyle[sideKey]
         )}
       >
         {side}
@@ -62,7 +76,7 @@ export function TeamBadge({
             <span
               className={cn(
                 "font-mono text-[9px] uppercase tracking-widest",
-                `text-${sideColor}`
+                activeStyle[sideKey]
               )}
             >
               ● Staked
@@ -84,7 +98,7 @@ export function TeamBadge({
           className={cn(
             "font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 rounded",
             "border border-dashed transition-colors duration-200",
-            `border-${sideColor}/40 text-${sideColor} hover:bg-${sideColor}/10`
+            accentStyle[sideKey]
           )}
         >
           Connect Wallet
