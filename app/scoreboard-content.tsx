@@ -9,6 +9,7 @@ import { MatchSelector } from "./components/MatchSelector";
 import { FeedTicker } from "./components/FeedTicker";
 import { ResolutionFlip } from "./components/ResolutionFlip";
 import { WalletButton } from "./components/WalletButton";
+import { cn } from "./lib/utils";
 import type { Match, Side, StakePosition, MatchStatus, FeedState } from "./lib/types";
 
 const MOCK_MATCHES: Match[] = [
@@ -188,7 +189,12 @@ export function ScoreboardContent() {
           <WalletButton />
         </header>
 
-        <main className="flex-1 flex flex-col items-center justify-center px-4 gap-6 py-6 max-w-4xl mx-auto w-full">
+        <main
+          className={cn(
+            "flex-1 flex flex-col items-center justify-center px-4 gap-6 py-6 max-w-4xl mx-auto w-full",
+            matchStatus === "live" && "live-glow"
+          )}
+        >
           {match && (
             <div className="animate-roll-in stagger-1 text-center">
               <span className="font-league text-2xl sm:text-3xl md:text-4xl tracking-widest text-chalk uppercase block leading-tight">
@@ -246,9 +252,12 @@ export function ScoreboardContent() {
                 </div>
               ) : (
                 <div className="animate-roll-in stagger-2 flex-shrink-0">
-                  <div className="scoreboard-panel px-6 py-4">
+                  <div className="scoreboard-panel settling-panel px-6 py-5 flex flex-col items-center gap-2">
                     <span className="font-mono text-[10px] uppercase tracking-widest text-floodlight animate-pulse">
                       Settling...
+                    </span>
+                    <span className="font-mono text-[8px] uppercase tracking-widest text-chalk/20">
+                      TxLINE CPI Verify
                     </span>
                   </div>
                 </div>
