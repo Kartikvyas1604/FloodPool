@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Clock } from "./components/Clock";
 import { TeamBadge } from "./components/TeamBadge";
@@ -68,6 +68,9 @@ export function ScoreboardContent() {
     payout: number;
   } | null>(null);
 
+  const cornersRef = useRef(corners);
+  cornersRef.current = corners;
+
   const opponentStake =
     stakes.length === 2 && publicKey
       ? stakes.find((s) => s.wallet !== publicKey.toBase58()) ?? null
@@ -112,22 +115,22 @@ export function ScoreboardContent() {
       });
     }, 1000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchStatus]);
 
   // Trigger result when halftime hits
   useEffect(() => {
     if (matchStatus === "halftime" && !result) {
       const timer = setTimeout(() => {
+        const finalCorners = cornersRef.current;
         setResult({
-          corners,
-          winner: corners > 5 ? "OVER" : "UNDER",
+          corners: finalCorners,
+          winner: finalCorners > 5 ? "OVER" : "UNDER",
           payout: 240,
         });
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [matchStatus, corners, result]);
+  }, [matchStatus, result]);
 
   // Simulate corner updates
   useEffect(() => {
@@ -265,25 +268,25 @@ export function ScoreboardContent() {
 
           {!connected && match && (
             <div className="font-mono text-[10px] uppercase tracking-widest text-chalk/30 text-center animate-roll-in stagger-4">
-              Connect your wallet to place a stake
+              CONNECT WALLET TO PLACE STAKE
             </div>
           )}
 
           {connected && match && matchStatus === "upcoming" && (
             <div className="font-mono text-[10px] uppercase tracking-widest text-chalk/30 text-center animate-roll-in stagger-4">
-              Match hasn&apos;t kicked off yet
+              KICKOFF PENDING — SELECT A LIVE MATCH
             </div>
           )}
 
           {matchStatus === "halftime" && !result && (
             <div className="font-mono text-[10px] uppercase tracking-widest text-floodlight text-center animate-pulse">
-              Settling on-chain via TxLINE CPI...
+              SETTLING ON-CHAIN VIA TxLINE CPI...
             </div>
           )}
 
           {matchStatus === "settled" && (
             <div className="font-mono text-[10px] uppercase tracking-widest text-chalk/30 text-center">
-              This match has been settled
+              MATCH SETTLED — NO FURTHER STAKES
             </div>
           )}
         </main>
