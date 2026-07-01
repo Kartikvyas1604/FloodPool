@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { cn, shortenAddress } from "../lib/utils";
@@ -9,8 +10,9 @@ interface WalletButtonProps {
 }
 
 export function WalletButton({ className }: WalletButtonProps) {
-  const { publicKey, connected, disconnect, connecting } = useWallet();
+  const { publicKey, connected, disconnect, connecting, wallet } = useWallet();
   const { setVisible } = useWalletModal();
+  const [copied, setCopied] = useState(false);
 
   if (connecting) {
     return (
@@ -26,18 +28,28 @@ export function WalletButton({ className }: WalletButtonProps) {
   }
 
   if (connected && publicKey) {
+    const addr = publicKey.toBase58();
     return (
-      <button
-        onClick={() => disconnect()}
-        className={cn(
-          "font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 rounded",
-          "border border-chalk/15 text-chalk/50 hover:text-chalk/70 hover:border-chalk/30",
-          "transition-colors duration-200",
-          className
-        )}
-      >
-        {shortenAddress(publicKey.toBase58())} ✕
-      </button>
+      <div className={cn("flex items-center gap-2", className)}>
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(addr);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+          }}
+          className="font-mono text-[10px] uppercase tracking-widest px-2 py-1.5 rounded border border-chalk/10 text-chalk/40 hover:text-chalk/60 hover:border-chalk/20 transition-colors"
+          title="Copy address"
+        >
+          {copied ? "COPIED" : shortenAddress(addr)}
+        </button>
+        <button
+          onClick={() => disconnect()}
+          className="font-mono text-[10px] uppercase tracking-widest px-2 py-1.5 rounded text-corner-flag/50 hover:text-corner-flag border border-corner-flag/10 hover:border-corner-flag/30 transition-colors"
+          title="Disconnect"
+        >
+          ✕
+        </button>
+      </div>
     );
   }
 

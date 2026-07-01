@@ -198,7 +198,7 @@ export function ScoreboardContent() {
           )}
 
           {match && (
-            <div className="flex items-center justify-center gap-3 sm:gap-6 w-full mt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 w-full mt-2">
               <TeamBadge
                 label={publicKey ? "Your Wallet" : "Unconnected"}
                 side="OVER"

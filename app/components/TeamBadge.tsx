@@ -41,7 +41,7 @@ export function TeamBadge({
   return (
     <div
       className={cn(
-        "scoreboard-panel p-4 sm:p-6 flex flex-col items-center gap-3 min-w-[160px] sm:min-w-[200px]",
+        "scoreboard-panel p-3 sm:p-6 flex flex-col items-center gap-2 sm:gap-3 w-full sm:min-w-[200px]",
         "animate-slide-left",
         position === "right" && "animate-slide-right"
       )}
