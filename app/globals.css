@@ -1,26 +1,299 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "DSEG7 Classic";
+  src: url("/fonts/DSEG7Classic-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --pitch-dark: #0B3D2E;
+  --pitch-stripe: #146443;
+  --chalk: #F4F1E8;
+  --floodlight: #FFB627;
+  --corner-flag: #E4572E;
+  --scoreboard-black: #111111;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-pitch-dark: var(--pitch-dark);
+  --color-pitch-stripe: var(--pitch-stripe);
+  --color-chalk: var(--chalk);
+  --color-floodlight: var(--floodlight);
+  --color-corner-flag: var(--corner-flag);
+  --color-scoreboard-black: var(--scoreboard-black);
+  --font-dseg7: "DSEG7 Classic", monospace;
+  --font-league: "League Gothic", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--pitch-dark);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 60px,
+      rgba(255, 255, 255, 0.015) 60px,
+      rgba(255, 255, 255, 0.015) 120px
+    ),
+    radial-gradient(
+      ellipse 120% 80% at 50% 0%,
+      rgba(255, 182, 39, 0.06) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 80% 60% at 80% 0%,
+      rgba(255, 182, 39, 0.04) 0%,
+      transparent 60%
+    );
+  background-color: var(--pitch-dark);
+  background-blend-mode: overlay;
+  min-height: 100vh;
+  color: var(--chalk);
+  font-family: "IBM Plex Mono", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.halfline-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.halfline-bg::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80vmin;
+  height: 80vmin;
+  transform: translate(-50%, -60%);
+  border-radius: 50%;
+  border: 2px solid rgba(244, 241, 232, 0.04);
+}
+
+.halfline-bg::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 56vmin;
+  height: 56vmin;
+  transform: translate(-50%, -60%);
+  border-radius: 50%;
+  border: 1px solid rgba(244, 241, 232, 0.025);
+}
+
+/* Scoreboard panel base */
+.scoreboard-panel {
+  background: var(--scoreboard-black);
+  border: 1px solid rgba(244, 241, 232, 0.1);
+  border-radius: 4px;
+  position: relative;
+}
+
+.scoreboard-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(244, 241, 232, 0.2),
+    transparent
+  );
+}
+
+/* LED digit style */
+.led-digit {
+  font-family: "DSEG7 Classic", monospace;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.05em;
+}
+
+/* Clip-flip animation for halftime resolution */
+@keyframes flipDown {
+  0% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+  45% {
+    transform: rotateX(90deg);
+    opacity: 0;
+  }
+  55% {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+.flip-card {
+  perspective: 600px;
+}
+
+.flip-card-inner {
+  position: relative;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flip-card-inner.flipped {
+  transform: rotateX(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  backface-visibility: hidden;
+  position: absolute;
+  inset: 0;
+}
+
+.flip-card-back {
+  transform: rotateX(180deg);
+}
+
+/* Load animations */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-60px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(60px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes rollIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes tickerEnter {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-roll-in {
+  animation: rollIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Ticker scroll */
+@keyframes tickerScroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.ticker-text {
+  animation: tickerScroll 20s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-text:hover {
+  animation-play-state: paused;
+}
+
+/* Stagger delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.4s; }
+.stagger-4 { animation-delay: 0.6s; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-left,
+  .animate-slide-right,
+  .animate-roll-in,
+  .ticker-text,
+  .flip-card-inner {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .flip-card-inner.flipped {
+    transform: none;
+  }
+
+  .flip-card-front,
+  .flip-card-back {
+    backface-visibility: visible;
+    position: static;
+  }
+
+  .flip-card-back {
+    transform: none;
+  }
+}
+
+/* Focus visible */
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--floodlight);
+  outline-offset: 2px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scoreboard-black);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(244, 241, 232, 0.15);
+  border-radius: 3px;
 }
