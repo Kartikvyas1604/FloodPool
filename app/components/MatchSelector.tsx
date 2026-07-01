@@ -10,6 +10,13 @@ interface MatchSelectorProps {
   disabled?: boolean;
 }
 
+const STATUS_LABEL: Record<string, { label: string; color: string }> = {
+  live: { label: "● LIVE", color: "text-floodlight" },
+  upcoming: { label: "UPCOMING", color: "text-chalk/30" },
+  halftime: { label: "HALFTIME", color: "text-floodlight" },
+  settled: { label: "SETTLED", color: "text-chalk/20" },
+};
+
 export function MatchSelector({
   matches,
   selected,
@@ -29,6 +36,8 @@ export function MatchSelector({
       <div className="flex flex-wrap justify-center gap-2">
         {matches.map((match) => {
           const isSelected = selected?.id === match.id;
+          const status = STATUS_LABEL[match.status];
+
           return (
             <button
               key={match.id}
@@ -36,21 +45,29 @@ export function MatchSelector({
               disabled={disabled}
               className={cn(
                 "font-mono text-[11px] uppercase tracking-wider px-3 py-2 rounded",
-                "border transition-all duration-200",
+                "border transition-all duration-200 text-left",
                 isSelected
                   ? "bg-floodlight text-scoreboard-black border-floodlight font-semibold"
                   : "border-chalk/10 text-chalk/50 hover:border-chalk/30 hover:text-chalk/70",
                 disabled && "opacity-40 cursor-not-allowed"
               )}
             >
-              <span className="block leading-tight">
+              <span className="block leading-tight font-semibold">
                 {match.homeTeam}
               </span>
               <span className="block text-[9px] text-chalk/30 leading-tight">
                 vs
               </span>
-              <span className="block leading-tight">
+              <span className="block leading-tight font-semibold">
                 {match.awayTeam}
+              </span>
+              <span
+                className={cn(
+                  "block text-[8px] leading-tight mt-1",
+                  status.color
+                )}
+              >
+                {status.label}
               </span>
             </button>
           );

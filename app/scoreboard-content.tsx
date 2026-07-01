@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Clock } from "./components/Clock";
 import { TeamBadge } from "./components/TeamBadge";
@@ -71,10 +71,24 @@ export function ScoreboardContent() {
   const cornersRef = useRef(corners);
   cornersRef.current = corners;
 
-  const opponentStake =
-    stakes.length === 2 && publicKey
-      ? stakes.find((s) => s.wallet !== publicKey.toBase58()) ?? null
-      : null;
+  const opponentStake = useMemo(
+    () =>
+      stakes.length === 2 && publicKey
+        ? (stakes.find((s) => s.wallet !== publicKey.toBase58()) ?? null)
+        : null,
+    [stakes, publicKey]
+  );
+
+  const myOverStake = useMemo(
+    () =>
+      publicKey
+        ? (stakes.find(
+            (s) =>
+              s.wallet === publicKey.toBase58() && s.side === "OVER"
+          ) ?? null)
+        : null,
+    [stakes, publicKey]
+  );
 
   const handleSelectMatch = useCallback((m: Match) => {
     setMatch(m);
@@ -120,6 +134,9 @@ export function ScoreboardContent() {
   // Trigger result when halftime hits
   useEffect(() => {
     if (matchStatus === "halftime" && !result) {
+      setMatch((prev) =>
+        prev ? { ...prev, status: "halftime" } : prev
+      );
       const timer = setTimeout(() => {
         const finalCorners = cornersRef.current;
         setResult({
@@ -145,7 +162,10 @@ export function ScoreboardContent() {
 
   // Feed ticker
   useEffect(() => {
-    if (!match) return;
+    if (!match) {
+      setFeed({ synced: false, fixtureId: null, statKey: "—" });
+      return;
+    }
     setFeed(getDefaultFeed(match));
     const interval = setInterval(() => {
       setFeed((f) => ({
@@ -202,13 +222,7 @@ export function ScoreboardContent() {
               <TeamBadge
                 label={publicKey ? "Your Wallet" : "Unconnected"}
                 side="OVER"
-                stake={
-                  stakes.find(
-                    (s) =>
-                      s.wallet === publicKey?.toBase58() &&
-                      s.side === "OVER"
-                  ) ?? null
-                }
+                stake={myOverStake}
                 position="left"
                 address={publicKey?.toBase58()}
               />
