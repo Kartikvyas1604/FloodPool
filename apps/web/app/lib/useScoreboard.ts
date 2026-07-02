@@ -68,21 +68,20 @@ export function useScoreboard() {
   const cornersRef = useRef(corners);
   cornersRef.current = corners;
 
-  const opponentStake = useMemo(
-    () =>
-      stakes.length === 2 && publicKey
-        ? (stakes.find((s) => s.wallet !== publicKey.toBase58()) ?? null)
-        : null,
-    [stakes, publicKey]
+  const overStake = useMemo(
+    () => stakes.find((s) => s.side === "OVER") ?? null,
+    [stakes]
   );
 
-  const myOverStake = useMemo(
+  const underStake = useMemo(
+    () => stakes.find((s) => s.side === "UNDER") ?? null,
+    [stakes]
+  );
+
+  const myStakeSide = useMemo(
     () =>
       publicKey
-        ? (stakes.find(
-            (s) =>
-              s.wallet === publicKey.toBase58() && s.side === "OVER"
-          ) ?? null)
+        ? (stakes.find((s) => s.wallet === publicKey.toBase58())?.side ?? null)
         : null,
     [stakes, publicKey]
   );

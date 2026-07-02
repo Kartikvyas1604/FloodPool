@@ -9,6 +9,7 @@ interface TeamBadgeProps {
   stake: StakePosition | null;
   position: "left" | "right";
   address?: string;
+  highlight?: boolean;
   onConnect?: () => void;
 }
 

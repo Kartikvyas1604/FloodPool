@@ -19,8 +19,9 @@ export function ScoreboardContent() {
     corners,
     feed,
     result,
-    opponentStake,
-    myOverStake,
+    overStake,
+    underStake,
+    myStakeSide,
     connected,
     publicKey,
     handleSelectMatch,
@@ -96,11 +97,12 @@ export function ScoreboardContent() {
               aria-label="Match scoreboard"
             >
               <TeamBadge
-                label={publicKey ? "Your Wallet" : "Unconnected"}
+                label={overStake ? "OVER" : "OVER — Open"}
                 side="OVER"
-                stake={myOverStake}
+                stake={overStake}
                 position="left"
-                address={publicKey?.toBase58()}
+                address={overStake?.wallet}
+                highlight={myStakeSide === "OVER"}
               />
 
               {matchStatus !== "halftime" && matchStatus !== "settled" ? (
@@ -134,16 +136,12 @@ export function ScoreboardContent() {
               )}
 
               <TeamBadge
-                label={
-                  opponentStake
-                    ? "Opponent"
-                    : publicKey
-                      ? "Awaiting Opponent"
-                      : "Unconnected"
-                }
+                label={underStake ? "UNDER" : "UNDER — Open"}
                 side="UNDER"
-                stake={opponentStake}
+                stake={underStake}
                 position="right"
+                address={underStake?.wallet}
+                highlight={myStakeSide === "UNDER"}
               />
             </div>
           )}
