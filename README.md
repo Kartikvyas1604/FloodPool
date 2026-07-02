@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HalfLine — Live Match Escrow
+
+Peer-to-peer USDC escrow on Solana. Two wallets stake USDC on a live football match's first-half corner count (over/under), settled automatically at halftime via an on-chain CPI into TxLINE's `validate_stat`.
+
+## Architecture
+
+This is a **pnpm monorepo** with Turborepo build orchestration.
+
+```
+halfline/
+├── apps/
+│   └── web/                   ← Next.js web app (scoreboard UI)
+├── packages/
+│   ├── config/                ← Shared TypeScript, ESLint, Prettier configs
+│   ├── ui/                    ← Shared component library (design tokens, primitives, atoms)
+│   ├── hooks/                 ← Shared React hooks (useTheme, usePlatform, useLocalStorage)
+│   ├── utils/                 ← Pure utility functions (formatters, validators, storage, logger)
+│   ├── store/                 ← Zustand stores (match state, settings)
+│   └── api/                   ← API client and types for TxLINE feed
+```
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+
+# Run the web app
+pnpm dev --filter=@halfline/web
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the scoreboard.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+|---|---|
+| `pnpm dev` | Run all apps in dev mode |
+| `pnpm build` | Build all apps and packages |
+| `pnpm lint` | Lint all packages |
+| `pnpm test` | Run all tests |
+| `pnpm typecheck` | TypeScript check all packages |
+| `pnpm clean` | Clean all build artifacts |
+| `pnpm dev:web` | Dev server for web app only |
+| `pnpm build:web` | Build web app only |
 
-## Learn More
+## Adding a Shared Package
 
-To learn more about Next.js, take a look at the following resources:
+1. Create `packages/<name>/` with `package.json`, `tsconfig.json`, and `src/index.ts`
+2. Add it to `pnpm-workspace.yaml` if needed (already covers `packages/*`)
+3. Add a reference in root `tsconfig.json`
+4. Import via `@halfline/<name>` in any app
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Design Identity
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+HalfLine uses a **stadium scoreboard** aesthetic — deep turf greens, warm chalk-white text, amber floodlight accents, and corner-flag red for stakes. The signature font is **DSEG7 Classic** (seven-segment LED) for the countdown clock and corner tally, **League Gothic** for headlines, and **IBM Plex Mono** for data readouts.
 
-## Deploy on Vercel
+See `brand.md` for the full design token reference.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Environment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+NEXT_PUBLIC_TXLINE_API=https://api.devnet.txline.io
+```
