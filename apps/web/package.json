@@ -19,11 +19,6 @@
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
-  "pnpm": {
-    "overrides": {
-      "@solana/wallet-adapter-base": "^0.9.27"
-    }
-  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

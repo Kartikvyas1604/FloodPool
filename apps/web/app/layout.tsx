@@ -36,7 +36,9 @@ export default function RootLayout({
       lang="en"
       className={`${leagueGothic.variable} ${ibmPlexMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

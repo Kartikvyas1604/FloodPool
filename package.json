@@ -18,6 +18,11 @@
     "turbo": "^2.10.2",
     "typescript": "^5"
   },
+  "pnpm": {
+    "overrides": {
+      "@solana/wallet-adapter-base": "^0.9.27"
+    }
+  },
   "packageManager": "pnpm@10.33.2",
   "engines": {
     "node": ">=20.9.0"
