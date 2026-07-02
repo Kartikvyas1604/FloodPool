@@ -86,10 +86,10 @@ export function TeamBadge({
         </div>
       ) : address ? (
         <div className="flex flex-col items-center gap-1">
-          <span className="font-mono text-xs text-chalk/30">
+          <span className="font-mono text-xs text-chalk/50">
             {shortenAddress(address)}
           </span>
-          <span className="font-mono text-[9px] uppercase tracking-widest text-chalk/20">
+          <span className="font-mono text-[9px] uppercase tracking-widest text-chalk/40">
             No stake
           </span>
         </div>

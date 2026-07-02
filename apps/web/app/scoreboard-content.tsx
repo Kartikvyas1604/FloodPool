@@ -58,7 +58,7 @@ export function ScoreboardContent() {
               >
                 {match.homeTeam}
               </span>
-              <span className="font-mono text-[10px] tracking-widest text-chalk/20 uppercase block my-1">
+              <span className="font-mono text-[10px] tracking-widest text-chalk/40 uppercase block my-1">
                 vs
               </span>
               <span
@@ -68,7 +68,7 @@ export function ScoreboardContent() {
               >
                 {match.awayTeam}
               </span>
-              <span className="font-mono text-[9px] tracking-widest text-chalk/20 uppercase block mt-2">
+              <span className="font-mono text-[10px] tracking-widest text-chalk/40 uppercase block mt-2">
                 Fixture #{match.fixtureId} · {match.statKey}
               </span>
             </div>
@@ -77,13 +77,13 @@ export function ScoreboardContent() {
           {!match && (
             <div className="flex flex-col items-center gap-2 animate-roll-in stagger-1">
               <span
-                className="font-league text-2xl tracking-widest text-chalk/50 uppercase"
+                className="font-league text-2xl tracking-widest text-chalk/70 uppercase"
                 role="heading"
                 aria-level={2}
               >
                 Select a Match
               </span>
-              <span className="font-mono text-[10px] text-chalk/20 uppercase tracking-widest">
+              <span className="font-mono text-[10px] text-chalk/40 uppercase tracking-widest">
                 Choose from live World Cup fixtures below
               </span>
             </div>
@@ -160,13 +160,13 @@ export function ScoreboardContent() {
           )}
 
           {!connected && match && (
-            <div className="font-mono text-[10px] uppercase tracking-widest text-chalk/30 text-center animate-roll-in stagger-4">
+            <div className="font-mono text-[10px] uppercase tracking-widest text-chalk/50 text-center animate-roll-in stagger-4">
               CONNECT WALLET TO PLACE STAKE
             </div>
           )}
 
           {connected && match && matchStatus === "upcoming" && (
-            <div className="font-mono text-[10px] uppercase tracking-widest text-chalk/30 text-center animate-roll-in stagger-4">
+            <div className="font-mono text-[10px] uppercase tracking-widest text-chalk/50 text-center animate-roll-in stagger-4">
               KICKOFF PENDING — SELECT A LIVE MATCH
             </div>
           )}
@@ -182,7 +182,7 @@ export function ScoreboardContent() {
           )}
 
           {matchStatus === "settled" && (
-            <div className="font-mono text-[10px] uppercase tracking-widest text-chalk/30 text-center">
+            <div className="font-mono text-[10px] uppercase tracking-widest text-chalk/50 text-center">
               MATCH SETTLED — NO FURTHER STAKES
             </div>
           )}
