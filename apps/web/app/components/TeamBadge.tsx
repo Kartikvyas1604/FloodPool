@@ -49,7 +49,7 @@ export function TeamBadge({
     >
       <span
         className={cn(
-          "font-league text-lg sm:text-xl tracking-widest text-chalk uppercase",
+          "font-league text-lg sm:text-xl tracking-widest text-white uppercase",
           isActive && activeStyle[sideKey]
         )}
       >

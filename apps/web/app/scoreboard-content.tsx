@@ -34,7 +34,7 @@ export function ScoreboardContent() {
 
       <div className="relative z-10 flex flex-col flex-1">
         <header className="flex items-center justify-between px-4 sm:px-6 py-3">
-          <h1 className="font-league text-xl sm:text-2xl tracking-widest text-chalk uppercase">
+          <h1 className="font-league text-xl sm:text-2xl tracking-widest text-white uppercase">
             HalfLine
           </h1>
           <WalletButton />
@@ -52,7 +52,7 @@ export function ScoreboardContent() {
           {match && (
             <div className="animate-roll-in stagger-1 text-center">
               <span
-                className="font-league text-2xl sm:text-3xl md:text-4xl tracking-widest text-chalk uppercase block leading-tight"
+                className="font-league text-2xl sm:text-3xl md:text-4xl tracking-widest text-white uppercase block leading-tight"
                 role="heading"
                 aria-level={2}
               >
@@ -62,7 +62,7 @@ export function ScoreboardContent() {
                 vs
               </span>
               <span
-                className="font-league text-2xl sm:text-3xl md:text-4xl tracking-widest text-chalk uppercase block leading-tight"
+                className="font-league text-2xl sm:text-3xl md:text-4xl tracking-widest text-white uppercase block leading-tight"
                 role="heading"
                 aria-level={2}
               >
@@ -77,7 +77,7 @@ export function ScoreboardContent() {
           {!match && (
             <div className="flex flex-col items-center gap-2 animate-roll-in stagger-1">
               <span
-                className="font-league text-2xl tracking-widest text-chalk/70 uppercase"
+                className="font-league text-2xl tracking-widest text-white/80 uppercase"
                 role="heading"
                 aria-level={2}
               >
