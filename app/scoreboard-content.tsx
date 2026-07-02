@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useScoreboard } from "./lib/useScoreboard";
+import { cn } from "./lib/utils";
 import { Clock } from "./components/Clock";
 import { TeamBadge } from "./components/TeamBadge";
 import { StakePanel } from "./components/StakePanel";
@@ -9,177 +9,23 @@ import { MatchSelector } from "./components/MatchSelector";
 import { FeedTicker } from "./components/FeedTicker";
 import { ResolutionFlip } from "./components/ResolutionFlip";
 import { WalletButton } from "./components/WalletButton";
-import { cn } from "./lib/utils";
-import type { Match, Side, StakePosition, MatchStatus, FeedState } from "./lib/types";
-
-function buildMockMatches(): Match[] {
-  const now = Date.now();
-  return [
-    {
-      id: "m1",
-      homeTeam: "Brazil",
-      awayTeam: "Argentina",
-      fixtureId: 4471,
-      statKey: "1007+1008",
-      kickoff: now - 120000,
-      status: "live",
-    },
-    {
-      id: "m2",
-      homeTeam: "Germany",
-      awayTeam: "France",
-      fixtureId: 4472,
-      statKey: "1007+1008",
-      kickoff: now + 1800000,
-      status: "upcoming",
-    },
-    {
-      id: "m3",
-      homeTeam: "England",
-      awayTeam: "Spain",
-      fixtureId: 4473,
-      statKey: "1007+1008",
-      kickoff: now - 3600000,
-      status: "settled",
-    },
-  ];
-}
-
-function getDefaultFeed(match: Match | null): FeedState {
-  return {
-    synced: true,
-    fixtureId: match?.fixtureId ?? null,
-    statKey: match?.statKey ?? "—",
-  };
-}
 
 export function ScoreboardContent() {
-  const { publicKey, connected } = useWallet();
-
-  const [matchList] = useState<Match[]>(buildMockMatches);
-  const [match, setMatch] = useState<Match | null>(null);
-  const [matchStatus, setMatchStatus] = useState<MatchStatus>("upcoming");
-  const [clock, setClock] = useState(0);
-  const [corners, setCorners] = useState(0);
-  const [stakes, setStakes] = useState<StakePosition[]>([]);
-  const [feed, setFeed] = useState<FeedState>({
-    synced: false,
-    fixtureId: null,
-    statKey: "—",
-  });
-  const [result, setResult] = useState<{
-    corners: number;
-    winner: Side | null;
-    payout: number;
-  } | null>(null);
-
-  const cornersRef = useRef(corners);
-  cornersRef.current = corners;
-
-  const opponentStake = useMemo(
-    () =>
-      stakes.length === 2 && publicKey
-        ? (stakes.find((s) => s.wallet !== publicKey.toBase58()) ?? null)
-        : null,
-    [stakes, publicKey]
-  );
-
-  const myOverStake = useMemo(
-    () =>
-      publicKey
-        ? (stakes.find(
-            (s) =>
-              s.wallet === publicKey.toBase58() && s.side === "OVER"
-          ) ?? null)
-        : null,
-    [stakes, publicKey]
-  );
-
-  const handleSelectMatch = useCallback((m: Match) => {
-    setMatch(m);
-    setMatchStatus(m.status);
-    setFeed({ synced: true, fixtureId: m.fixtureId, statKey: m.statKey });
-    setCorners(0);
-    setClock(0);
-    setResult(null);
-    setStakes([]);
-  }, []);
-
-  const handleStake = useCallback(
-    (side: Side, amount: number) => {
-      if (!publicKey) return;
-      const addr = publicKey.toBase58();
-      setStakes((prev) => {
-        const filtered = prev.filter((s) => s.wallet !== addr);
-        return [
-          ...filtered,
-          { wallet: addr, side, amount, confirmed: true },
-        ];
-      });
-    },
-    [publicKey]
-  );
-
-  // Simulate clock
-  useEffect(() => {
-    if (matchStatus !== "live") return;
-    const interval = setInterval(() => {
-      setClock((c) => {
-        if (c >= 2700) {
-          clearInterval(interval);
-          setMatchStatus("halftime");
-          return 2700;
-        }
-        return c + 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [matchStatus]);
-
-  // Trigger result when halftime hits
-  useEffect(() => {
-    if (matchStatus === "halftime" && !result) {
-      setMatch((prev) =>
-        prev ? { ...prev, status: "halftime" } : prev
-      );
-      const timer = setTimeout(() => {
-        const finalCorners = cornersRef.current;
-        setResult({
-          corners: finalCorners,
-          winner: finalCorners > 5 ? "OVER" : "UNDER",
-          payout: 240,
-        });
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [matchStatus, result]);
-
-  // Simulate corner updates
-  useEffect(() => {
-    if (matchStatus !== "live") return;
-    const interval = setInterval(() => {
-      if (Math.random() > 0.85) {
-        setCorners((c) => c + 1);
-      }
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [matchStatus]);
-
-  // Feed ticker
-  useEffect(() => {
-    if (!match) {
-      setFeed({ synced: false, fixtureId: null, statKey: "—" });
-      return;
-    }
-    setFeed(getDefaultFeed(match));
-    const interval = setInterval(() => {
-      setFeed((f) => ({
-        ...f,
-        synced: f.synced ? Math.random() > 0.05 : Math.random() > 0.4,
-      }));
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [match]);
+  const {
+    matchList,
+    match,
+    matchStatus,
+    clock,
+    corners,
+    feed,
+    result,
+    opponentStake,
+    myOverStake,
+    connected,
+    publicKey,
+    handleSelectMatch,
+    handleStake,
+  } = useScoreboard();
 
   return (
     <div className="relative min-h-screen flex flex-col">
@@ -198,16 +44,27 @@ export function ScoreboardContent() {
             "flex-1 flex flex-col items-center justify-center px-4 gap-6 py-6 max-w-4xl mx-auto w-full",
             matchStatus === "live" && "live-glow"
           )}
+          role="main"
+          aria-label="Scoreboard"
         >
+          {/* Fixture heading */}
           {match && (
             <div className="animate-roll-in stagger-1 text-center">
-              <span className="font-league text-2xl sm:text-3xl md:text-4xl tracking-widest text-chalk uppercase block leading-tight">
+              <span
+                className="font-league text-2xl sm:text-3xl md:text-4xl tracking-widest text-chalk uppercase block leading-tight"
+                role="heading"
+                aria-level={2}
+              >
                 {match.homeTeam}
               </span>
               <span className="font-mono text-[10px] tracking-widest text-chalk/20 uppercase block my-1">
                 vs
               </span>
-              <span className="font-league text-2xl sm:text-3xl md:text-4xl tracking-widest text-chalk uppercase block leading-tight">
+              <span
+                className="font-league text-2xl sm:text-3xl md:text-4xl tracking-widest text-chalk uppercase block leading-tight"
+                role="heading"
+                aria-level={2}
+              >
                 {match.awayTeam}
               </span>
               <span className="font-mono text-[9px] tracking-widest text-chalk/20 uppercase block mt-2">
@@ -218,7 +75,11 @@ export function ScoreboardContent() {
 
           {!match && (
             <div className="flex flex-col items-center gap-2 animate-roll-in stagger-1">
-              <span className="font-league text-2xl tracking-widest text-chalk/50 uppercase">
+              <span
+                className="font-league text-2xl tracking-widest text-chalk/50 uppercase"
+                role="heading"
+                aria-level={2}
+              >
                 Select a Match
               </span>
               <span className="font-mono text-[10px] text-chalk/20 uppercase tracking-widest">
@@ -227,8 +88,13 @@ export function ScoreboardContent() {
             </div>
           )}
 
+          {/* Scoreboard centerpiece */}
           {match && (
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 w-full mt-2">
+            <div
+              className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 w-full mt-2"
+              role="region"
+              aria-label="Match scoreboard"
+            >
               <TeamBadge
                 label={publicKey ? "Your Wallet" : "Unconnected"}
                 side="OVER"
@@ -282,6 +148,7 @@ export function ScoreboardContent() {
             </div>
           )}
 
+          {/* Match selector */}
           <MatchSelector
             matches={matchList}
             selected={match}
@@ -289,6 +156,7 @@ export function ScoreboardContent() {
             disabled={matchStatus === "live"}
           />
 
+          {/* Stake panel */}
           {connected && match && matchStatus === "live" && (
             <StakePanel onStake={handleStake} />
           )}
@@ -306,7 +174,11 @@ export function ScoreboardContent() {
           )}
 
           {matchStatus === "halftime" && !result && (
-            <div className="font-mono text-[10px] uppercase tracking-widest text-floodlight text-center animate-pulse">
+            <div
+              className="font-mono text-[10px] uppercase tracking-widest text-floodlight text-center animate-pulse"
+              role="status"
+              aria-live="polite"
+            >
               SETTLING ON-CHAIN VIA TxLINE CPI...
             </div>
           )}
