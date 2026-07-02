@@ -13,11 +13,6 @@ interface TeamBadgeProps {
   onConnect?: () => void;
 }
 
-const SIDE_COLORS = {
-  OVER: "corner-flag" as const,
-  UNDER: "floodlight" as const,
-} as const;
-
 export function TeamBadge({
   label,
   side,
@@ -26,70 +21,59 @@ export function TeamBadge({
   address,
   onConnect,
 }: TeamBadgeProps) {
-  const isActive = stake?.side === side;
   const sideKey = side === "OVER" ? "OVER" : "UNDER";
+
   const accentStyle = {
     OVER: "text-corner-flag border-corner-flag/40 hover:bg-corner-flag/10",
-    UNDER:
-      "text-floodlight border-floodlight/40 hover:bg-floodlight/10",
-  };
-
-  const activeStyle = {
-    OVER: "text-corner-flag",
-    UNDER: "text-floodlight",
+    UNDER: "text-floodlight border-floodlight/40 hover:bg-floodlight/10",
   };
 
   return (
     <div
       className={cn(
-        "scoreboard-panel p-3 sm:p-6 flex flex-col items-center gap-2 sm:gap-3 w-full sm:min-w-[200px]",
+        "scoreboard-panel p-3 flex flex-col items-center gap-1.5 w-full min-w-0 max-w-[180px]",
         "animate-slide-left",
         position === "right" && "animate-slide-right"
       )}
     >
-      <span
-        className={cn(
-          "font-league text-lg sm:text-xl tracking-widest text-white uppercase",
-          isActive && activeStyle[sideKey]
-        )}
-      >
+      <span className="font-league text-base sm:text-lg tracking-widest text-white uppercase leading-tight">
         {side}
       </span>
 
-      <span className="font-mono text-[10px] uppercase tracking-widest text-chalk/40">
+      <span className="font-mono text-[9px] uppercase tracking-widest text-chalk/70 leading-tight">
         {label}
       </span>
 
       {stake ? (
-        <div className="flex flex-col items-center gap-1">
+        <div className="flex flex-col items-center gap-0.5">
           <span
             className={cn(
-              "led-digit text-2xl sm:text-3xl tabular-nums",
+              "led-digit text-xl sm:text-2xl tabular-nums leading-tight",
               side === "OVER" ? "text-corner-flag" : "text-floodlight"
             )}
           >
             ${formatUsdc(stake.amount)}
           </span>
-          <span className="font-mono text-[10px] text-chalk/40">
+          <span className="font-mono text-[9px] text-chalk/70">
             {shortenAddress(stake.wallet)}
           </span>
           {stake.confirmed && (
             <span
               className={cn(
-                "font-mono text-[9px] uppercase tracking-widest",
-                activeStyle[sideKey]
+                "font-mono text-[8px] uppercase tracking-widest",
+                side === "OVER" ? "text-corner-flag" : "text-floodlight"
               )}
             >
-              ● Staked
+              &bull; Staked
             </span>
           )}
         </div>
       ) : address ? (
-        <div className="flex flex-col items-center gap-1">
-          <span className="font-mono text-xs text-chalk/50">
+        <div className="flex flex-col items-center gap-0.5">
+          <span className="font-mono text-[10px] text-chalk/70">
             {shortenAddress(address)}
           </span>
-          <span className="font-mono text-[9px] uppercase tracking-widest text-chalk/40">
+          <span className="font-mono text-[8px] uppercase tracking-widest text-chalk/60">
             No stake
           </span>
         </div>
@@ -97,7 +81,7 @@ export function TeamBadge({
         <button
           onClick={onConnect}
           className={cn(
-            "font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 rounded",
+            "font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded",
             "border border-dashed transition-colors duration-200",
             accentStyle[sideKey]
           )}

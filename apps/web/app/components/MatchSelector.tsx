@@ -12,9 +12,9 @@ interface MatchSelectorProps {
 
 const STATUS_LABEL: Record<string, { label: string; color: string }> = {
   live: { label: "● LIVE", color: "text-floodlight" },
-  upcoming: { label: "UPCOMING", color: "text-chalk/30" },
+  upcoming: { label: "UPCOMING", color: "text-chalk/50" },
   halftime: { label: "HALFTIME", color: "text-floodlight" },
-  settled: { label: "SETTLED", color: "text-chalk/20" },
+  settled: { label: "SETTLED", color: "text-chalk/40" },
 };
 
 export function MatchSelector({
@@ -26,14 +26,14 @@ export function MatchSelector({
   return (
     <div
       className={cn(
-        "scoreboard-panel p-3 sm:p-4 flex flex-col items-center gap-3",
+        "scoreboard-panel p-2 flex items-center gap-2",
         "animate-roll-in stagger-3"
       )}
     >
-      <span className="font-league text-sm tracking-widest text-chalk/50 uppercase">
-        Select Match
+      <span className="font-league text-[11px] tracking-widest text-chalk/70 uppercase shrink-0">
+        Matches
       </span>
-      <div className="flex flex-wrap justify-center gap-2">
+      <div className="flex gap-1.5 overflow-x-auto">
         {matches.map((match) => {
           const isSelected = selected?.id === match.id;
           const status = STATUS_LABEL[match.status];
@@ -44,29 +44,18 @@ export function MatchSelector({
               onClick={() => onSelect(match)}
               disabled={disabled}
               className={cn(
-                "font-mono text-[11px] uppercase tracking-wider px-3 py-2 rounded",
-                "border transition-all duration-200 text-left",
+                "font-mono text-[10px] uppercase tracking-wider px-2 py-1.5 rounded whitespace-nowrap",
+                "border transition-all duration-200 shrink-0",
                 isSelected
                   ? "bg-floodlight text-scoreboard-black border-floodlight font-semibold"
-                  : "border-chalk/10 text-chalk/50 hover:border-chalk/30 hover:text-chalk/70",
+                  : "border-chalk/10 text-chalk/60 hover:border-chalk/30 hover:text-chalk/80",
                 disabled && "opacity-40 cursor-not-allowed"
               )}
             >
-              <span className="block leading-tight font-semibold">
-                {match.homeTeam}
-              </span>
-              <span className="block text-[9px] text-chalk/30 leading-tight">
-                vs
-              </span>
-              <span className="block leading-tight font-semibold">
-                {match.awayTeam}
-              </span>
-              <span
-                className={cn(
-                  "block text-[8px] leading-tight mt-1",
-                  status.color
-                )}
-              >
+              <span className="leading-tight">{match.homeTeam}</span>
+              <span className="text-[8px] text-chalk/50 mx-0.5">vs</span>
+              <span className="leading-tight">{match.awayTeam}</span>
+              <span className={cn("block text-[7px] leading-tight", status.color)}>
                 {status.label}
               </span>
             </button>

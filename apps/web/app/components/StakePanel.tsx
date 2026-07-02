@@ -30,11 +30,11 @@ export function StakePanel({ onStake, disabled }: StakePanelProps) {
     <form
       onSubmit={handleSubmit}
       className={cn(
-        "scoreboard-panel p-4 sm:p-5 flex flex-col items-center gap-4",
+        "scoreboard-panel p-3 flex flex-col items-center gap-2",
         "animate-roll-in stagger-4"
       )}
     >
-      <span className="font-league text-sm tracking-widest text-chalk/50 uppercase">
+      <span className="font-league text-xs tracking-widest text-chalk/80 uppercase">
         Place Stake
       </span>
 
@@ -44,8 +44,8 @@ export function StakePanel({ onStake, disabled }: StakePanelProps) {
         disabled={disabled}
       />
 
-      <div className="relative w-full max-w-[220px]">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 font-dseg7 text-lg text-chalk/30">
+      <div className="relative w-full max-w-[180px]">
+        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 font-dseg7 text-base text-chalk/50">
           $
         </span>
         <input
@@ -59,7 +59,7 @@ export function StakePanel({ onStake, disabled }: StakePanelProps) {
           onBlur={() => setFocused(false)}
           disabled={disabled}
           className={cn(
-            "w-full bg-scoreboard-black border rounded px-7 py-2.5 font-dseg7 text-lg text-chalk",
+            "w-full bg-scoreboard-black border rounded px-6 py-1.5 font-dseg7 text-base text-chalk",
             "placeholder:text-chalk/15 outline-none transition-colors duration-200",
             focused
               ? "border-floodlight/50"
@@ -73,11 +73,11 @@ export function StakePanel({ onStake, disabled }: StakePanelProps) {
         type="submit"
         disabled={!valid || disabled}
         className={cn(
-          "font-league text-base tracking-widest uppercase px-8 py-2.5 rounded",
+          "font-league text-sm tracking-widest uppercase px-6 py-1.5 rounded",
           "transition-all duration-200",
           valid && !disabled
             ? "bg-corner-flag text-chalk hover:bg-corner-flag/90 active:scale-95"
-            : "bg-chalk/5 text-chalk/20 cursor-not-allowed"
+            : "bg-chalk/5 text-chalk/40 cursor-not-allowed"
         )}
       >
         Confirm Stake

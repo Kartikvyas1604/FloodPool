@@ -15,51 +15,33 @@ function formatTime(seconds: number): string {
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
-function DigitRoll({ char, delay }: { char: string; delay: number }) {
-  return (
-    <span
-      className="inline-block led-digit-roll"
-      style={{ animationDelay: `${delay}s` }}
-    >
-      {char}
-    </span>
-  );
-}
-
 export function Clock({ seconds, corners, running, className }: ClockProps) {
   const timeStr = formatTime(seconds);
 
   return (
-    <div className={cn("flex flex-col items-center gap-1", className)}>
-      <div className="scoreboard-panel px-4 sm:px-6 py-3 flex items-center gap-3 sm:gap-4">
-        <span className="led-digit text-3xl sm:text-5xl md:text-7xl text-floodlight tabular-nums overflow-hidden">
-          {timeStr.split("").map((char, i) => (
-            <DigitRoll key={`t${i}`} char={char} delay={0.3 + i * 0.08} />
-          ))}
+    <div className={cn("flex flex-col items-center gap-0.5", className)}>
+      <div className="scoreboard-panel px-3 py-2 flex items-center gap-2 sm:gap-3">
+        <span className="led-digit text-2xl sm:text-3xl md:text-4xl text-floodlight tabular-nums overflow-hidden leading-none">
+          {timeStr}
         </span>
-        <span className="text-chalk/30 text-2xl sm:text-4xl font-mono">|</span>
-        <div className="flex flex-col items-start">
-          <span className="font-league text-[10px] sm:text-xs tracking-widest text-chalk/40 uppercase">
+        <span className="text-chalk/50 text-xl sm:text-2xl font-mono leading-none">|</span>
+        <div className="flex flex-col items-start gap-0">
+          <span className="font-league text-[9px] tracking-widest text-chalk/70 uppercase leading-tight">
             Corners
           </span>
-          <span className="led-digit text-2xl sm:text-4xl md:text-6xl text-corner-flag tabular-nums overflow-hidden">
-            {String(corners)
-              .padStart(2, "0")
-              .split("")
-              .map((char, i) => (
-                <DigitRoll key={`c${i}`} char={char} delay={0.5 + i * 0.1} />
-              ))}
+          <span className="led-digit text-xl sm:text-2xl md:text-3xl text-corner-flag tabular-nums overflow-hidden leading-none">
+            {String(corners).padStart(2, "0")}
           </span>
         </div>
       </div>
       {running && (
-        <span className="font-mono text-[10px] uppercase tracking-widest text-floodlight animate-pulse">
-          ● Live
+        <span className="font-mono text-[9px] uppercase tracking-widest text-floodlight animate-pulse">
+          &bull; Live
         </span>
       )}
       {!running && (
-        <span className="font-mono text-[10px] uppercase tracking-widest text-chalk/20">
-          ● Paused
+        <span className="font-mono text-[9px] uppercase tracking-widest text-chalk/50">
+          &bull; Paused
         </span>
       )}
     </div>

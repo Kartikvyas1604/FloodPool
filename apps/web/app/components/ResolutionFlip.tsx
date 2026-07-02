@@ -46,7 +46,7 @@ export function ResolutionFlip({
         {/* Front face (hidden during flip) */}
         <div className="flip-card-front">
           <div className="scoreboard-panel px-6 py-4 flex flex-col items-center gap-2">
-            <span className="font-mono text-[10px] text-chalk/20 uppercase tracking-widest">
+            <span className="font-mono text-[10px] text-chalk/50 uppercase tracking-widest">
               Result Pending
             </span>
           </div>
@@ -61,7 +61,7 @@ export function ResolutionFlip({
             )}
           >
             {/* Status badge */}
-            <span className="font-mono text-[9px] uppercase tracking-widest text-green-500/70">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-green-500">
               ● CPI Confirmed
             </span>
 
@@ -69,7 +69,7 @@ export function ResolutionFlip({
             <div className="w-full h-px bg-gradient-to-r from-transparent via-chalk/10 to-transparent" />
 
             {/* Corner tally */}
-            <span className="font-mono text-[10px] uppercase tracking-widest text-chalk/30">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-chalk/60">
               Final Corner Count
             </span>
             <span className="led-digit text-5xl sm:text-6xl text-chalk tabular-nums leading-none">
@@ -90,7 +90,7 @@ export function ResolutionFlip({
 
             {/* Payout */}
             <div className="flex items-baseline gap-2 mt-1">
-              <span className="font-mono text-[9px] uppercase tracking-widest text-chalk/30">
+              <span className="font-mono text-[9px] uppercase tracking-widest text-chalk/60">
                 Payout
               </span>
               <span
@@ -106,7 +106,7 @@ export function ResolutionFlip({
             {/* Release badge */}
             <div className="flex items-center gap-1.5 mt-1">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              <span className="font-mono text-[8px] uppercase tracking-widest text-chalk/20">
+              <span className="font-mono text-[8px] uppercase tracking-widest text-chalk/40">
                 Released to winner
               </span>
             </div>

@@ -37,14 +37,14 @@ export function WalletButton({ className }: WalletButtonProps) {
             setCopied(true);
             setTimeout(() => setCopied(false), 1500);
           }}
-          className="font-mono text-[10px] uppercase tracking-widest px-2 py-1.5 rounded border border-chalk/10 text-chalk/40 hover:text-chalk/60 hover:border-chalk/20 transition-colors"
+          className="font-mono text-[10px] uppercase tracking-widest px-2 py-1.5 rounded border border-chalk/10 text-chalk/60 hover:text-chalk/80 hover:border-chalk/20 transition-colors"
           title="Copy address"
         >
           {copied ? "COPIED" : shortenAddress(addr)}
         </button>
         <button
           onClick={() => disconnect()}
-          className="font-mono text-[10px] uppercase tracking-widest px-2 py-1.5 rounded text-corner-flag/50 hover:text-corner-flag border border-corner-flag/10 hover:border-corner-flag/30 transition-colors"
+          className="font-mono text-[10px] uppercase tracking-widest px-2 py-1.5 rounded text-corner-flag/70 hover:text-corner-flag border border-corner-flag/10 hover:border-corner-flag/30 transition-colors"
           title="Disconnect"
         >
           ✕

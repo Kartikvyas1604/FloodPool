@@ -24,24 +24,24 @@ export function FeedTicker({ feed, className }: FeedTickerProps) {
     return (
       <>
         {isSynced ? (
-          <span className="text-green-500/60">● SYNCED</span>
+          <span className="text-green-500">● SYNCED</span>
         ) : (
           <span className="text-corner-flag animate-pulse">● FEED LOST — RETRYING</span>
         )}
-        <span className="text-chalk/20">·</span>
-        <span className="text-chalk/40">
+        <span className="text-chalk/40">·</span>
+        <span className="text-chalk/60">
           FIXTURE #{feed.fixtureId ?? "—"}
         </span>
-        <span className="text-chalk/20">·</span>
-        <span className="text-chalk/40">
+        <span className="text-chalk/40">·</span>
+        <span className="text-chalk/60">
           statKey {feed.statKey}
         </span>
-        <span className="text-chalk/20">·</span>
-        <span className="text-chalk/40">
+        <span className="text-chalk/40">·</span>
+        <span className="text-chalk/60">
           TxLINE CPI · Devnet
         </span>
-        <span className="text-chalk/20">·</span>
-        <span className="text-chalk/30">
+        <span className="text-chalk/40">·</span>
+        <span className="text-chalk/50">
           {timestamp} UTC
         </span>
       </>

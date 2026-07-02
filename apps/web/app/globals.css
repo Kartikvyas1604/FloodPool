@@ -35,6 +35,8 @@
 
 body {
   margin: 0;
+  overflow: hidden;
+  height: 100vh;
   background-color: var(--pitch-dark);
   background-image:
     repeating-linear-gradient(
@@ -45,11 +47,8 @@ body {
       rgba(255, 255, 255, 0.02) 120px
     );
   background-size: auto;
-  min-height: 100vh;
   color: var(--chalk);
   font-family: "IBM Plex Mono", monospace;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 body::before {
